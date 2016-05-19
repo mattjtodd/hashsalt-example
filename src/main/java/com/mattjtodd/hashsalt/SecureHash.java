@@ -2,6 +2,7 @@ package com.mattjtodd.hashsalt;
 
 import javaslang.Tuple2;
 import javaslang.control.Try;
+import org.apache.commons.lang3.RandomUtils;
 
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -21,7 +22,7 @@ public class SecureHash {
     }
 
     public static void main(String[] args) throws Throwable {
-        
+
         // use a SHA-256 message digest
         MessageDigest hashFunction = MessageDigest.getInstance("SHA-256");
 
@@ -29,7 +30,11 @@ public class SecureHash {
         SecureRandom secureRandom = new SecureRandom();
 
         // supplier function using the digest bytes length
-        Supplier<byte[]> saltSeller = () -> secureRandom.generateSeed(hashFunction.getDigestLength());
+        Supplier<byte[]> saltSeller = () -> {
+            byte[] salt = new byte[hashFunction.getDigestLength()];
+            secureRandom.nextBytes(salt);
+            return salt;
+        };
 
         Tuple2<byte[], byte[]> password = hash("password", saltSeller, hashFunction::digest)
             .getOrElseThrow(thrown -> new RuntimeException("Error creating secure hash", thrown.getCause()));
