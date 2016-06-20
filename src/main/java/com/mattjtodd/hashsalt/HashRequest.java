@@ -2,40 +2,38 @@ package com.mattjtodd.hashsalt;
 
 import java.util.Arrays;
 
+import static com.mattjtodd.hashsalt.ArrayCopyUtils.copyOf;
+
 public class HashRequest {
 
     private final char[] characters;
 
     private final int iterations;
 
-    private final int saltBytes;
-
     private final String algorithm;
 
     private final int keyLength;
 
+    private final int saltBytes;
+
     HashRequest() {
-        this(0, new char[0], 0, "", 0);
+        this(new char[0], 0, "", 0, 0);
     }
 
-    public HashRequest(int saltBytes, char[] characters, int iterations, String algorithm, int keyLength) {
-        this.characters = Arrays.copyOf(characters, characters.length);
+    public HashRequest(char[] characters, int iterations, String algorithm, int keyLength, int saltBytes) {
+        this.characters = copyOf(characters);
         this.iterations = iterations;
-        this.saltBytes = saltBytes;
         this.algorithm = algorithm;
         this.keyLength = keyLength;
+        this.saltBytes = saltBytes;
+    }
+
+    public char[] getCharacters() {
+        return copyOf(characters);
     }
 
     public int getIterations() {
         return iterations;
-    }
-
-    public char[] getCharacters() {
-        return characters;
-    }
-
-    public int getSaltBytes() {
-        return saltBytes;
     }
 
     public String getAlgorithm() {
@@ -44,5 +42,22 @@ public class HashRequest {
 
     public int getKeyLength() {
         return keyLength;
+    }
+
+    public int getSaltBytes() {
+        return saltBytes;
+    }
+
+    
+
+    @Override
+    public String toString() {
+        return "HashRequest{" +
+               "characters=" + Arrays.toString(characters) +
+               ", iterations=" + iterations +
+               ", algorithm='" + algorithm + '\'' +
+               ", keyLength=" + keyLength +
+               ", saltBytes=" + saltBytes +
+               '}';
     }
 }
